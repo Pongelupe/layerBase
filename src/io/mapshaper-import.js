@@ -51,6 +51,13 @@ export function importContent(obj, opts) {
     stop("Missing an expected input type");
   }
 
+  if (fileFmt === 'dsv' && opts.files && opts.files.indexOf("coords") !== -1) {
+    dataset.layers.forEach(l => {
+      setLayerProp(l, 'geometry_type', 'point');
+      setLayerProp(l, 'shapes', prepareShapeFromCoords(l.data.getRecords()));
+    })
+  }
+
   // Convert to topological format, if needed
   if (dataset.arcs && !opts.no_topology && fileFmt != 'topojson') {
     buildTopology(dataset);
@@ -69,6 +76,7 @@ export function importContent(obj, opts) {
     dataset.info.input_files = [data.filename];
   }
   dataset.info.input_formats = [fileFmt];
+  console.log(dataset);
   return dataset;
 }
 
@@ -128,4 +136,17 @@ function setLayerName(lyr, path) {
   if (!lyr.name) {
     lyr.name = getFileBase(path);
   }
+}
+
+function setLayerProp(lyr, prop, value) {
+  lyr[`${prop}`] = value
+}
+
+function prepareShapeFromCoords(records) {
+  var isNumber = n => { return !isNaN(parseFloat(n)) && !isNaN(n - 0) }
+
+  return records
+    .map(r => [r['X'], r['Y']])
+    .filter(n => isNumber(n[0]) && isNumber(n[1]))
+    .map(n => [[parseFloat(n[0]), parseFloat(n[1])]]);
 }

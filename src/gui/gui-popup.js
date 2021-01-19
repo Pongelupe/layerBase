@@ -76,10 +76,21 @@ export function Popup(gui, toNext, toPrev) {
   }
 
   function render(el, rec, table, editable) {
-    var tableEl = El('table').addClass('selectable'),
-        rows = 0;
-    // self.hide(); // clean up if panel is already open
+    console.log(rec);
+    var tableEl = El('table')
+      .addClass('selectable'),
+    rows = 0;
     el.empty(); // clean up if panel is already open
+
+    var addBtn = El('h5')
+      .addClass('colored-text')
+      .appendTo(el)
+      .html("Add new property");
+    addBtn.on('click', () => {
+      console.log(rec)
+    });
+
+    // self.hide(); // clean up if panel is already open
     utils.forEachProperty(rec, function(v, k) {
       var type;
       // missing GeoJSON fields are set to undefined on import; skip these
@@ -122,7 +133,6 @@ export function Popup(gui, toNext, toPrev) {
       margin-top: 16px;">
     </td>`;
     var rowHtml = `<td class="field-name">%s</td><td><span class="value">%s</span></td>${editable ? closeButton : ''}`;
-    // debugger;
     var val = rec[key];
     var str = formatInspectorValue(val, type);
     var cell = El('tr')

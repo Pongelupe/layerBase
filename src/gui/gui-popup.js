@@ -115,24 +115,36 @@ export function Popup(gui, toNext, toPrev) {
 
   function renderRow(table, rec, key, type, editable) {
     var closeButton = `
-    <td>
-      <img class="close-btn" draggable="false" src="images/close.png" style="
+    <td class="close-btn">
+      <img draggable="false" src="images/close.png" style="
       width: 16px;
       height: 16px;
       margin-top: 16px;">
     </td>`;
-    var rowHtml = `<td class="field-name">%s</td><td><span class="value">%s</span></td>`;
+    var rowHtml = `<td class="field-name">%s</td><td><span class="value">%s</span></td>${editable ? closeButton : ''}`;
+    // debugger;
     var val = rec[key];
     var str = formatInspectorValue(val, type);
     var cell = El('tr')
         .appendTo(table)
         .html(utils.format(rowHtml, key, utils.htmlEscape(str)))
         .findChild('.value');
+
+    var tds = cell.findParent('tr').findChildren('td');
+
+    if (tds.length === 3) {
+      tds[2].on('click', () => deleteRec(rec, key))
+    }
+
     setFieldClass(cell, val, type);
     if (editable) {
-      rowHtml += closeButton;
       editItem(cell, rec, key, type);
     }
+  }
+
+  function deleteRec(rec, key) {
+    delete rec[key];
+    refresh();
   }
 
   function setFieldClass(el, val, type) {
@@ -146,7 +158,6 @@ export function Popup(gui, toNext, toPrev) {
   }
 
   function editItem(el, rec, key, type) {
-    debugger;
     var input = new ClickText2(el),
         strval = formatInspectorValue(rec[key], type),
         parser = getInputParser(type);

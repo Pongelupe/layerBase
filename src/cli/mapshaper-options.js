@@ -1454,6 +1454,18 @@ export function getOptionParser() {
     })
     .option('target', targetOpt);
 
+  parser.command('temporal')
+    .describe('create commands on-the-fly and run them')
+    .option('id', {
+      DEFAULT: 'id',
+      describe: 'id collumn on the second dataset (join point)'
+    })
+    .option('date', {
+      DEFAULT: 'date',
+      describe: 'date collumn on the second dataset to use the temporal feature'
+    })
+    .option('target', targetOpt);
+
   parser.command('scalebar')
     // .describe()
     .option('top', {})

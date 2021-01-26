@@ -57,6 +57,7 @@ import '../commands/mapshaper-rectangle';
 import '../commands/mapshaper-rename-layers';
 import '../commands/mapshaper-require';
 import '../commands/mapshaper-run';
+import '../commands/mapshaper-temporal';
 import '../commands/mapshaper-scalebar';
 import '../commands/mapshaper-simplify';
 import '../commands/mapshaper-sort';
@@ -74,6 +75,7 @@ import '../simplify/mapshaper-variable-simplify';
 import '../commands/mapshaper-split-on-grid';
 import '../commands/mapshaper-subdivide';
 
+const mergedDatasetCommands = ['merge-layers', 'union', 'temporal'];
 
 export function runCommand(command, catalog, cb) {
   var name = command.name,
@@ -113,7 +115,7 @@ export function runCommand(command, catalog, cb) {
 
       // special case to allow -merge-layers and -union to combine layers from multiple datasets
       // TODO: support multi-dataset targets for other commands
-      if (targets.length > 1 && (name == 'merge-layers' || name == 'union')) {
+      if (targets.length > 1 && mergedDatasetCommands.includes(name)) {
         targets = mergeCommandTargets(targets, catalog);
       }
 
@@ -379,6 +381,10 @@ export function runCommand(command, catalog, cb) {
 
     } else if (name == 'target') {
       cmd.target(catalog, opts);
+
+    } else if (name == 'temporal') {
+      cmd.temporal(targets, catalog, opts, done);
+      return;
 
     } else if (name == 'union') {
       outputLayers = cmd.union(targetLayers, targetDataset, opts);

@@ -454,7 +454,7 @@ export function getOptionParser() {
     .option('target', targetOpt)
     .option('no-replace', noReplaceOpt);
 
-  parser.command('colorizer')
+    parser.command('colorizer')
     .describe('define a function to convert data values to color classes')
     .flag('no_arg')
     .option('colors', {
@@ -464,6 +464,10 @@ export function getOptionParser() {
     .option('breaks', {
       describe: 'ascending-order list of breaks for sequential color scheme',
       type: 'numbers'
+    })
+    .option('gradient', {
+      describe: 'gradient between break colors',
+      type: 'flag'
     })
     .option('categories', {
       describe: 'comma-sep. list of keys for categorical color scheme',

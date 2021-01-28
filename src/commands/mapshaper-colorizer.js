@@ -30,7 +30,11 @@ export function getColorizerFunction(opts) {
   if (opts.random) {
     colorFunction = getRandomColorFunction(opts.colors);
   } else if (opts.breaks) {
-    colorFunction = getSequentialColorFunction(opts.colors, opts.breaks, round);
+	if (opts.gradient) {
+	    colorFunction = getGradientColorFunction(opts.colors, opts.breaks, round);
+	} else {
+		colorFunction = getSequentialColorFunction(opts.colors, opts.breaks, round);
+	}
   } else if (opts.categories) {
     colorFunction = getCategoricalColorFunction(opts.colors, opts.other, opts.categories);
   } else {
@@ -113,6 +117,7 @@ export function getSequentialColorFunction(colors, breaks, round) {
   };
 }
 
+
 function arraysAreIdentical(a, b) {
   for (var i=0; i<a.length; i++) {
     if (a[i] !== b[i]) return false;
@@ -127,6 +132,7 @@ function testAscendingNumbers(arr) {
 function testDescendingNumbers(arr) {
   return arraysAreIdentical(arr, utils.genericSort(arr.map(parseFloat), false));
 }
+
 // breaks: threshold values between ranges (ascending order)
 // Returns array index of a sequential range, or -1 if @val not numeric
 function getClassId(val, breaks) {
@@ -139,3 +145,76 @@ function getClassId(val, breaks) {
   while (i < breaks.length && val >= breaks[i]) i++;
   return i;
 }
+
+//----------------------
+function rgbToHex(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+      ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      }
+      : null;
+}
+
+export function getGradientColorFunction(colors, breaks, round) {
+  if (colors.length != breaks.length) {
+    stop("Number of colors should be the same number of class breaks");
+  }
+  // validate breaks
+  // Accepts repeated values -- should this be allowed?
+  if (testAscendingNumbers(breaks)) {
+    // normal state
+  } else if (testDescendingNumbers(breaks)) {
+    breaks = breaks.concat().reverse();
+    colors = colors.concat().reverse();
+  } else {
+    stop('Invalid class breaks:', breaks.join(','));
+  }
+
+  return function(val) {
+    var i = -1;
+    if (Number(val) === val) { // exclude null, NaN, strings, etc.
+      if (round) val = val(round);
+      return getGradientColor(val, breaks, colors);
+    }
+    return null;
+  };
+}
+
+// breaks: threshold values between ranges (ascending order)
+// Returns rgb color between sequential range, or black if @val not numeric
+function getGradientColor(val, breaks, colors) {
+  var minVal = -Infinity,
+      maxVal = Infinity,
+      startColorRgb, endColorRgb,
+      i = 0,
+      perc = 0.0, color;
+
+  if (!(val >= minVal && val <= maxVal)) {
+    return '#000000';
+  }
+
+  while (i < breaks.length && val >= breaks[i]) i++;
+
+  if (i == 0) return colors[0];
+  if (i == breaks.length) return colors[i - 1];
+
+  perc = (val - breaks[i - 1]) / (breaks[i] - breaks[i - 1]);
+
+  startColorRgb = hexToRgb(colors[i - 1]);
+  endColorRgb = hexToRgb(colors[i]);
+
+  color = rgbToHex(
+    Math.round((endColorRgb.r - startColorRgb.r) * perc) + startColorRgb.r,
+    Math.round((endColorRgb.g - startColorRgb.g) * perc) + startColorRgb.g,
+    Math.round((endColorRgb.b - startColorRgb.b) * perc) + startColorRgb.b);
+
+  return color;
+}
+

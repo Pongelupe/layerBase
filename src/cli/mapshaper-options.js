@@ -1468,6 +1468,10 @@ export function getOptionParser() {
       DEFAULT: 'date',
       describe: 'date collumn on the second dataset to use the temporal feature'
     })
+    .option('timeout', {
+      DEFAULT: 3000,
+      describe: 'timeout between epochs'
+    })
     .option('target', targetOpt);
 
   parser.command('scalebar')

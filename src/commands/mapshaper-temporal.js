@@ -4,23 +4,26 @@ import cmd from '../mapshaper-cmd';
 cmd.temporal = async function (targets, catalog, opts, cb) {
     if (targets[0].layers.length < 2) {
         stop("At least two layers are required")
+        cb(null);
     }
 
     const id = opts.id || 'id';
     const date = opts.date || 'date';
+    const timeout = opts.timeout || 3000;
 
     const targetLayer = targets[0].layers[0];
     const dataLayer = targets[0].layers[1];
 
-    const dataGroupedByDate = dataLayer.data.getRecords()
-        .reduce((acc, el) => {
-            (acc[el[date]] = acc[el[date]] || []).push(el);
-            return acc;
-        });
+    const records = dataLayer.data.getRecords();
 
-    delete dataGroupedByDate.id;
-    delete dataGroupedByDate.date;
-    delete dataGroupedByDate.value;
+    const groupBy = (xs, key) => {
+        return xs.reduce((rv, x) => {
+          (rv[x[key]] = rv[x[key]] || []).push(x);
+          return rv;
+        }, {});
+      };
+      
+    const dataGroupedByDate = groupBy(records, date);
 
     const fillLayer = e => new Promise(resolve => {
         console.log(`showing values for date ${e[0]}`);
@@ -35,7 +38,7 @@ cmd.temporal = async function (targets, catalog, opts, cb) {
 
     let i = 0;
     Object.entries(dataGroupedByDate).map(e => {
-        promises.push(delay(e, i * 3000));
+       delay(e, i * timeout);
         i++;
     });
 }

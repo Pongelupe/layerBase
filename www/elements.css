@@ -121,11 +121,20 @@ div.tip {
 	margin-top: 5px;
 }
 
+.footer-btn {
+	color: #fff;
+	border: none;
+	padding: 3px 7px 4px 7px;
+	border-radius: 3px;
+}
+
 .page-header .header-btn.disabled,
+.page-footer .footer-btn.disabled,
 .page-header .header-btn.disabled:hover {
 	background-color: transparent;
 }
 
+.page-footer .footer-btn.active,
 .page-header .header-btn.active {
 	background-color: black;
 }

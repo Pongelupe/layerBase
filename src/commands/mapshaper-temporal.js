@@ -7,28 +7,46 @@ cmd.temporal = async function (targets, catalog, opts, cb) {
         cb(null);
     }
 
-    const id = opts.id || 'id';
+    const id = opts.id || 'ID';
     const date = opts.date || 'date';
     const timeout = opts.timeout || 3000;
+    const exp = opts.exp || `fill = 'green' `;
 
-    const targetLayer = targets[0].layers[0];
+    let targetLayer = targets[0].layers[0];
     const dataLayer = targets[0].layers[1];
 
     const records = dataLayer.data.getRecords();
 
     const groupBy = (xs, key) => {
         return xs.reduce((rv, x) => {
-          (rv[x[key]] = rv[x[key]] || []).push(x);
-          return rv;
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
         }, {});
-      };
-      
+    };
+
     const dataGroupedByDate = groupBy(records, date);
 
     const fillLayer = e => new Promise(resolve => {
         console.log(`showing values for date ${e[0]}`);
-        const ids = `[${e[1].map(v => v[id]).toString()}]`;
-        cmd.svgStyle(targetLayer, targets[0].dataset, { 'fill': 'green', 'where': `${ids}.includes(ID)` });
+        document.getElementById('date-input-id').value = e[0];
+
+        const defaultTemporal = Object.keys(e[1][0]).filter(k => ![id, date].includes(k)).reduce((acc, el) => {
+            acc[el] = null;
+            return acc;
+        }, { date: e[0] });
+        const findTemporal = i => e[1].filter(r => r[id] == i)[0] || { defaultTemporal };
+
+        targetLayer.data.getRecords()
+            .forEach(r => {
+                let temporal = findTemporal(r[id]);
+                Object.entries(temporal)
+                    .forEach(en => {
+                        r[en[0]] = en[1];
+                    })
+            });
+
+
+        cmd.evaluateEachFeature(targetLayer, targets[0].dataset.arcs, exp, {});
         cb(null);
     });
 
@@ -38,7 +56,9 @@ cmd.temporal = async function (targets, catalog, opts, cb) {
 
     let i = 0;
     Object.entries(dataGroupedByDate).map(e => {
-       delay(e, i * timeout);
+        delay(e, i * timeout);
         i++;
     });
+
+    cb(null);
 }

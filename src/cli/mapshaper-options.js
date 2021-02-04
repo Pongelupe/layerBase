@@ -1472,6 +1472,9 @@ export function getOptionParser() {
       DEFAULT: 3000,
       describe: 'timeout between epochs'
     })
+    .option('exp', {
+      describe: 'JS expression to apply to each target feature using each epoch'
+    })
     .option('target', targetOpt);
 
   parser.command('scalebar')

@@ -56,6 +56,8 @@ var startEditing = function() {
   new LayerControl(gui);
   gui.console = new Console(gui);
 
+  document.getElementById('date-input-id').value = new Date();
+
   startEditing = function() {};
 
   window.addEventListener('beforeunload', function(e) {

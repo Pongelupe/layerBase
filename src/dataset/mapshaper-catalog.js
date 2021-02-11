@@ -138,6 +138,16 @@ export function Catalog() {
     return targ ? {layer: targ.layers[0], dataset: targ.dataset} : null;
   };
 
+  this.getDataLayer = function() {
+    let activeLayer = this.getActiveLayer();
+    let dataLayer = null;
+    if (activeLayer) {
+      const currentLayerStackId = activeLayer.layer.stack_id;
+      dataLayer = this.getLayers().find(l => l.layer.stack_id !== currentLayerStackId);
+    }
+    return dataLayer;
+  };
+
   function layerObject(lyr, dataset) {
     return {
       layer: lyr,

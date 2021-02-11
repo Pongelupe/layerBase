@@ -28,7 +28,7 @@ cmd.temporal = async function (targets, catalog, opts, cb) {
 
     const fillLayer = e => new Promise(resolve => {
         console.log(`showing values for date ${e[0]}`);
-        document.getElementById('date-input-id').value = e[0];
+        document.getElementById('date-input-id').innerHTML = e[0];
 
         const defaultTemporal = Object.keys(e[1][0]).filter(k => ![id, date].includes(k)).reduce((acc, el) => {
             acc[el] = null;

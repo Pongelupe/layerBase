@@ -7,6 +7,7 @@ import { AlertControl } from './gui-error';
 import { RepairControl } from './gui-repair-control';
 import { ExportControl } from './gui-export-control';
 import { LayerControl } from './gui-layer-control';
+import { TemporalControl } from './gui-temporal-control';
 import { GuiInstance } from './gui-instance';
 import { onload } from './dom-utils';
 import { GUI } from './gui-lib';
@@ -54,9 +55,8 @@ var startEditing = function() {
   new ImportControl(gui, importOpts);
   new ExportControl(gui);
   new LayerControl(gui);
+  new TemporalControl(gui);
   gui.console = new Console(gui);
-
-  document.getElementById('date-input-id').value = new Date();
 
   startEditing = function() {};
 

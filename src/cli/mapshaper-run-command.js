@@ -27,6 +27,7 @@ import '../commands/mapshaper-dissolve2';
 import '../commands/mapshaper-divide';
 import '../commands/mapshaper-dots';
 import '../commands/mapshaper-drop';
+import '../commands/mapshaper-duplicate';
 import '../commands/mapshaper-each';
 import '../commands/mapshaper-explode';
 import '../io/mapshaper-export';
@@ -188,6 +189,10 @@ export function runCommand(command, catalog, cb) {
       cmd.drop2(catalog, targets, opts);
       // cmd.drop(catalog, targetLayers, targetDataset, opts);
 
+    }  else if (name == 'duplicate') {
+      cmd.duplicate(catalog, targets, opts);
+      done(null);
+      return;
     } else if (name == 'each') {
       applyCommandToEachLayer(cmd.evaluateEachFeature, targetLayers, arcs, opts.expression, opts);
 

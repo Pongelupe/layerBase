@@ -589,6 +589,39 @@ export function getOptionParser() {
     })
     .option('target', targetOpt);
 
+  parser.command('duplicate')
+    .describe('duplicate the target layer')
+    .option('affine', {
+      describe: 'the duplicated layer will affine with current layer(s)',
+      type: 'flag'
+    })
+    .option('visible', {
+      describe: 'the duplicated layer will visible',
+      type: 'flag'
+    })
+    .option('name', {
+      describe: 'the name of duplicated layer',
+      type: 'string'
+    })
+    .option('shift', {
+      type: 'strings',
+      describe: 'x,y offsets in source units (e.g. 5000,-5000)'
+    })
+    .option('scale', {
+      type: 'number',
+      describe: 'scale (default is 1)'
+    })
+    .option('rotate', {
+      type: 'number',
+      describe: 'angle of rotation in degrees (default is 0)'
+    })
+    .option('anchor', {
+      type: 'numbers',
+      describe: 'center of rotation/scaling (default is center of selected shapes)'
+    })
+    .option('where', whereOpt)
+    .option('target', targetOpt);
+
   parser.command('each')
     .describe('create/update/delete data fields using a JS expression')
     .example('Add two calculated data fields to a layer of U.S. counties\n' +

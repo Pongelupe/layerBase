@@ -1,5 +1,4 @@
 import cmd from '../mapshaper-cmd';
-import { ArcCollection } from '../paths/mapshaper-arcs';
 
 cmd.duplicate = function (catalog, targets, opts, cb) {
     const clone = obj => {
@@ -14,15 +13,15 @@ cmd.duplicate = function (catalog, targets, opts, cb) {
     const targetDataset = targets[0].dataset;
     const nextStackId = Math.max(catalog.getLayers().map(l => l.layer.stack_id)) + 1;
 
-    const name = opts.name || `${targets[0].layers[0].name}_${nextStackId}`;
-    const visibility = opts.visible ? 'visible' : 'hidden';
+    const name = opts.name || `${targets[0].layers[0].name}_${nextStackId || 1}`;
 
     const duplicatedDataset = clone(targetDataset);
     duplicatedDataset.arcs = targetDataset.arcs.getCopy();
     duplicatedDataset.displayArcs = targetDataset.displayArcs.getCopy();
     duplicatedDataset.layers = [clone(targetDataset.layers[0])];
-    duplicatedDataset.layers[0].visibility = visibility;
+    duplicatedDataset.layers[0].visibility = 'visible';
     duplicatedDataset.layers[0].data = targetDataset.layers[0].data.clone();
+    duplicatedDataset.layers[0].shapes = JSON.parse(JSON.stringify(targetDataset.layers[0].shapes));
     duplicatedDataset.layers[0].name = name;
     duplicatedDataset.layers[0].stack_id = nextStackId;
 

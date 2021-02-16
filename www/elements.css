@@ -111,6 +111,13 @@ div.tip {
 	top: -1000px;
 }
 
+/* -------- DIALOGS ---------- */
+
+#temporal-choose-target-prop-info-box {
+	left: 0;
+    margin-left: 150px;
+}
+
 /* -------- BUTTONS ---------- */
 
 .header-btn {

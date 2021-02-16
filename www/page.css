@@ -518,6 +518,12 @@ body.dragover #import-options-drop-area .drop-area {
 	border-radius: 9px;
 }
 
+.info-box-bottom {
+	position: absolute;
+	bottom: 0;
+	margin-bottom: 45px;
+}
+
 .info-box h3 {
 	font-size: 1.2em;
 	padding: 0;

@@ -163,7 +163,8 @@ body {
 	left: 0;
 	z-index: 40;
 	width: 100%;
-	height: 34px;
+	height: 27px;
+	display: flex;
 }
 .footer-img {
 	height: 30px;
@@ -193,7 +194,6 @@ body {
 .coordinate-info {
 	z-index: 1;
 	position: absolute;
-	bottom: 6px;
 	left: 6px;
 	padding: 2px 5px 2px 5px;
 	font-size: 11px;

@@ -120,6 +120,12 @@ div.tip {
 
 /* -------- BUTTONS ---------- */
 
+#play-control-btn {
+	z-index: 10;
+	margin: auto;
+	cursor: pointer;
+}
+
 .header-btn {
 	color: #fff;
 	border: none;

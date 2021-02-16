@@ -138,7 +138,7 @@ export function runCommand(command, catalog, cb) {
       }
       if (!(name == 'graticule' || name == 'i' || name == 'help' ||
           name == 'point-grid' || name == 'shape' || name == 'rectangle' ||
-          name == 'include')) {
+          name == 'include') && !(name == 'colorizer' && opts.gradient)) {
         throw new UserError("No data is available");
       }
     }

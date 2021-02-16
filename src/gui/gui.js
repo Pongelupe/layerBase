@@ -12,6 +12,7 @@ import { GuiInstance } from './gui-instance';
 import { onload } from './dom-utils';
 import { GUI } from './gui-lib';
 import { El } from './gui-el';
+import { loadInitalFunctions } from './gui-pre-loaded-functions';
 
 onload(function() {
   if (!GUI.browserIsSupported()) {
@@ -57,6 +58,8 @@ var startEditing = function() {
   new LayerControl(gui);
   new TemporalControl(gui);
   gui.console = new Console(gui);
+
+  loadInitalFunctions(gui);
 
   startEditing = function() {};
 

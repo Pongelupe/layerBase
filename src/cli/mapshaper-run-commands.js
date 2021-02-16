@@ -18,6 +18,7 @@ import utils from '../utils/mapshaper-utils';
 // input: (optional) Object containing file contents indexed by filename
 //
 export function runCommands(argv) {
+  debugger;
   var opts = importRunArgs.apply(null, arguments);
   _runCommands(argv, opts, function(err) {
     opts.callback(err);

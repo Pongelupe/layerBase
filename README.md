@@ -1,4 +1,4 @@
-# Mapshaper
+# LayerBase
 
 ## Introduction
 
